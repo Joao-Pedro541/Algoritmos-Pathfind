@@ -26,8 +26,8 @@ class GridObject():
         self.limity = (limityX,limityY)
  
         self.blocks = {
-            (357,357): BlockStates.START,
-            (500,500): BlockStates.END
+            self.calcGrid(0,0): BlockStates.START,
+            self.calcGrid(690,690): BlockStates.END
         }
         self.block_colors = {
             BlockStates.EMPTY: arcade.color.BLACK,
@@ -42,51 +42,44 @@ class GridObject():
             BlockStates.CURRENT: arcade.color.ORANGE,
             BlockStates.FRONTIER: arcade.color.CYAN,
         }
-        self.ajustGrid()
+        
     
     def ajustGrid(self):
         especialBlocks = {BlockStates.START: None,
                           BlockStates.END: None}
-        for b in list(self.blocks):
-            newB = self.calcGrid(b[0],b[1])
-            
-            
-
-            if newB != b:
-                self.blocks[newB] = self.blocks[b]
-                del self.blocks[b]
-            
-            if newB not in self.blocks:
-                continue
-            if self.blocks[newB] in especialBlocks:
-                if especialBlocks[self.blocks[newB]] is not None:
-                    del self.blocks[especialBlocks[self.blocks[newB]]]
-                    
-                especialBlocks[self.blocks[newB]] = newB
+        for i in list(especialBlocks.keys()):
+            for b in self.GetStates(i):
+                print(i)
+                if especialBlocks[i] is not None:
+                    del self.blocks[especialBlocks[self.blocks[b]]]
+                especialBlocks[i] = b
 
     def setBlock(self,block:tuple, state: BlockStates = BlockStates.EMPTY):
-
-        
-
         if state == BlockStates.EMPTY:
             self.blocks.pop(block, None)
-        elif (0,0) <block < self.limity:
-            self.blocks[block] = state
+        elif (0,0) <= block < self.limity:
+            self.blocks[self.calcGrid(*block)] = state
 
-        self.ajustGrid()
+
 
     def getBlock(self, block:tuple = None,  state: BlockStates = None):
-        self.ajustGrid()
         if block is not None:
             if block in self.blocks:
                 return self.blocks[block] 
         
         if state is not None:
             for pos, s in self.blocks.items():
-                if pos in self.blocks:
-                    if s == state:
-                        return pos
-        None
+                if s == state:
+                    return pos
+                
+    def GetStates(self,state: BlockStates = None):
+        if state is not None:
+            blocksStates = []
+            for pos, s in self.blocks.items():
+                if s == state:
+                    blocksStates.append(pos)
+            return blocksStates
+            
     
     def getNeighbors(self,pos:tuple,diagonal = True):
         if pos not in self.blocks:

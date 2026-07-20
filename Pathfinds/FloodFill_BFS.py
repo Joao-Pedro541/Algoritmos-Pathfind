@@ -3,10 +3,14 @@ from objects import PathfindAlgoritm,BlockStates
 class BFS(PathfindAlgoritm):
     def __init__(self, grid):
         self.startPath = False
-        super().__init__(grid)
+        
 
-        self.parent = {self.START: None}
+        self.parent = {}
+        self.verificy = []
         self.localizateEnd = False
+
+        super().__init__(grid)
+        self.ajustGrid()
         
         
     def ajustGrid(self):
@@ -17,6 +21,8 @@ class BFS(PathfindAlgoritm):
             if self.startPath == False and self.START in self.gridObject.blocks:
                 self.parent = {}
                 self.parent[self.START] = None
+                self.verificy.clear()
+                self.verificy.append(self.START)
 
 
 
@@ -37,7 +43,7 @@ class BFS(PathfindAlgoritm):
 
     def step(self):
         self.startPath = True
-        for b in list(self.parent):
+        for b in list(self.verificy):
             if self.localizateEnd == True:
                 continue
 
@@ -62,6 +68,8 @@ class BFS(PathfindAlgoritm):
                     self.gridObject.setBlock(n,BlockStates.OPEN)
 
                 self.parent[n] = b
+                self.verificy.append(n)
+            self.verificy.remove(b)
             
 
         return super().step()
