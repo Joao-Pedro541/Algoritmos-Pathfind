@@ -9,7 +9,7 @@ class window(arcade.Window):
     def __init__(self,lengthGrid,*args,**kwargs):
         super().__init__(*args,**kwargs)
 
-        self.objects = [GridObject(lengthGrid,self.height,self.width)]
+        self.objects = [GridObject(lengthGrid,self.width,self.height)]
         self.getfunction = lambda name,*args, **kwargs: [getattr(obj,name)(*args,**kwargs) for obj in self.objects if hasattr(obj, name)]
         self.objects.append(BFS(self.objects[0]))
 

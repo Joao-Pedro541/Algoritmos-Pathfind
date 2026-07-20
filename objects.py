@@ -26,8 +26,8 @@ class GridObject():
         self.limity = (limityX,limityY)
  
         self.blocks = {
-            self.calcGrid(0,0): BlockStates.START,
-            self.calcGrid(690,690): BlockStates.END
+            self.calcGrid(self.grid ,self.grid ): BlockStates.START,
+            self.calcGrid(limityX - self.grid,limityY - self.grid): BlockStates.END
         }
         self.block_colors = {
             BlockStates.EMPTY: arcade.color.BLACK,
@@ -49,7 +49,6 @@ class GridObject():
                           BlockStates.END: None}
         for i in list(especialBlocks.keys()):
             for b in self.GetStates(i):
-                print(i)
                 if especialBlocks[i] is not None:
                     del self.blocks[especialBlocks[self.blocks[b]]]
                 especialBlocks[i] = b
@@ -57,7 +56,7 @@ class GridObject():
     def setBlock(self,block:tuple, state: BlockStates = BlockStates.EMPTY):
         if state == BlockStates.EMPTY:
             self.blocks.pop(block, None)
-        elif (0,0) <= block < self.limity:
+        elif (0,0) <= block < tuple(a - b for a,b in zip(self.limity,(self.grid,self.grid))):
             self.blocks[self.calcGrid(*block)] = state
 
 
