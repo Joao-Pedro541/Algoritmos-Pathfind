@@ -23,11 +23,11 @@ class GridObject():
         self.grid = grid
 
         self.calcGrid = lambda x,y: ((x//self.grid)* self.grid,(y//self.grid)* self.grid)
-        self.limity = (limityX,limityY)
+        self.limity = (limityX - self.grid,limityY - self.grid)
  
         self.blocks = {
-            self.calcGrid(self.grid ,self.grid ): BlockStates.START,
-            self.calcGrid(limityX - self.grid,limityY - self.grid): BlockStates.END
+            self.calcGrid(0,0): BlockStates.START,
+            self.calcGrid(*self.limity): BlockStates.END
         }
         self.block_colors = {
             BlockStates.EMPTY: arcade.color.BLACK,
@@ -56,7 +56,7 @@ class GridObject():
     def setBlock(self,block:tuple, state: BlockStates = BlockStates.EMPTY):
         if state == BlockStates.EMPTY:
             self.blocks.pop(block, None)
-        elif (0,0) <= block < tuple(a - b for a,b in zip(self.limity,(self.grid,self.grid))):
+        if (0,0) <= block < self.limity:
             self.blocks[self.calcGrid(*block)] = state
 
 
@@ -108,8 +108,9 @@ class GridObject():
         
     def on_update(self,delta_time):
         pass
+    
     def draw(self):
-        for b in self.blocks:
+        for b in self.blocks.keys():
             x,y = b
             arcade.draw_rect_filled(arcade.rect.XYWH(x +self.grid /2,y+self.grid /2,self.grid,self.grid),self.getColorBlock(self.blocks[b]))
     
@@ -140,16 +141,17 @@ class PathfindAlgoritm():
         pass
 
     def on_update(self,delta_time):
-        self.ajustGrid()
         if self.nextStep or self.continuoStep:
             self.nextStep = False
             self.step()
     
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_MIDDLE:
+            self.ajustGrid()
             self.continuoStep = True
         
         if button == arcade.MOUSE_BUTTON_RIGHT:
+            self.ajustGrid()
             self.nextStep = True
 
         
