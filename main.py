@@ -3,7 +3,6 @@ import arcade
 from objects import GridObject
 from Pathfinds.FloodFill_BFS import BFS
 
-
 class window(arcade.Window):
 
     def __init__(self,lengthGrid,*args,**kwargs):
@@ -29,9 +28,9 @@ class window(arcade.Window):
 
 if __name__ == "__main__":
 
-    heigth = int(input("how is the height:"))
+    height = int(input("how is the height:"))
     width = int(input("how is the width:"))
     gridTam = int(input("how grid space:"))
 
-    scene = window(gridTam,title="Pathfind Test",width=width,height=heigth)
+    scene = window(gridTam,title="Pathfind Test",width=width,height=height)
     scene.run()

@@ -141,20 +141,10 @@ class PathfindAlgoritm():
         pass
 
     def on_update(self,delta_time):
-        if self.nextStep or self.continuoStep:
-            self.nextStep = False
-            self.step()
-    
-    def on_mouse_press(self, x, y, button, modifiers):
-        if button == arcade.MOUSE_BUTTON_MIDDLE:
-            self.ajustGrid()
-            self.continuoStep = True
-        
-        if button == arcade.MOUSE_BUTTON_RIGHT:
-            self.ajustGrid()
-            self.nextStep = True
+        pass
 
-        
+    def ExecuteOnce(self):
+        pass
 
     def step(self):
         pass

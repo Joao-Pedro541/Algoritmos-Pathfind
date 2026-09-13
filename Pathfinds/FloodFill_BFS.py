@@ -13,6 +13,7 @@ class BFS(PathfindAlgoritm):
         self.ajustGrid()
         
         
+        
     def ajustGrid(self):
         if self.gridObject is not None:
             self.START:tuple = self.gridObject.getBlock(state=BlockStates.START)
@@ -39,40 +40,42 @@ class BFS(PathfindAlgoritm):
                 self.gridObject.setBlock(b, BlockStates.PATH)
         
         self.parent = {}
+
+    def on_update(self,delta_time):
+        self.ExecuteOnce()
+    def step(self):
+        for b in list(self.verificy):
+            self.verificy.remove(b)
+
+            if b == self.END:
+                self.continuoStep = False
+                self.localizateEnd = True
+                self.returnPath(b)
+                print("fim")
+                break
+            
+            neighbors = self.gridObject.getNeighbors(b, False)
+            if neighbors == None:
+                continue
+            for n in neighbors:
+                if n in self.gridObject.blocks:
+                    if n in self.parent or self.gridObject.blocks[n] == BlockStates.WALL:
+                        continue
+
+
+                if self.gridObject.getBlock(b) != BlockStates.START and self.gridObject.getBlock(b) != BlockStates.END:
+                    self.gridObject.setBlock(b,BlockStates.CLOSED)
+                if self.gridObject.getBlock(n) != BlockStates.START and self.gridObject.getBlock(n) != BlockStates.END:
+                    self.gridObject.setBlock(n,BlockStates.OPEN)
+
+                self.parent[n] = b
+                self.verificy.append(n)
         
 
-    def step(self):
+    def ExecuteOnce(self):
         self.startPath = True
         start = time.perf_counter()
         while self.localizateEnd == False:
-            for b in list(self.verificy):
-                self.verificy.remove(b)
-
-                if b == self.END:
-                    self.continuoStep = False
-                    self.localizateEnd = True
-                    self.returnPath(b)
-                    print("fim")
-                    break
-                
-                neighbors = self.gridObject.getNeighbors(b, False)
-                if neighbors == None:
-                    continue
-                for n in neighbors:
-                    if n in self.gridObject.blocks:
-                        if n in self.parent or self.gridObject.blocks[n] == BlockStates.WALL:
-                            continue
-
-
-                    if self.gridObject.getBlock(b) != BlockStates.START and self.gridObject.getBlock(b) != BlockStates.END:
-                        self.gridObject.setBlock(b,BlockStates.CLOSED)
-                    if self.gridObject.getBlock(n) != BlockStates.START and self.gridObject.getBlock(n) != BlockStates.END:
-                        self.gridObject.setBlock(n,BlockStates.OPEN)
-
-                    self.parent[n] = b
-                    self.verificy.append(n)
+            self.step()
         end = time.perf_counter()
-
         print(end -start)
-                
-    
