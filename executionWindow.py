@@ -25,3 +25,9 @@ class window(arcade.Window):
     def on_mouse_press(self, x, y, button, modifiers):
         self.getfunction("on_mouse_press", x, y, button, modifiers)
         return super().on_mouse_press(x, y, button, modifiers)
+
+    def on_key_press(self, symbol, modifiers):
+        self.getfunction("on_press_key", symbol, modifiers)
+        if symbol == arcade.key.ESCAPE:
+            print("exit")
+            self.close()

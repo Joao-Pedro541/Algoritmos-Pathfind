@@ -11,6 +11,7 @@ class BFS(PathfindAlgoritm):
 
         super().__init__(grid)
         self.ajustGrid()
+        self.execute= False
         
         
         
@@ -42,7 +43,8 @@ class BFS(PathfindAlgoritm):
         self.parent = {}
 
     def on_update(self,delta_time):
-        self.ExecuteOnce()
+        if self.execute == False:
+            self.ExecuteOnce()
     def step(self):
         for b in list(self.verificy):
             self.verificy.remove(b)
@@ -51,6 +53,7 @@ class BFS(PathfindAlgoritm):
                 self.continuoStep = False
                 self.localizateEnd = True
                 self.returnPath(b)
+                self.execute = True
                 print("fim")
                 break
             
