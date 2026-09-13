@@ -12,9 +12,26 @@ class app:
         self.height = 700
         self.width = 700
         self.gridTam = 10
-        
-        
 
+        widthText = tk.Label(root,text="Width")
+        widthText.pack()
+
+        self.widthBox = tk.Entry(root)
+        self.widthBox.pack()
+
+        
+        heightText = tk.Label(root,text="Height")
+        heightText.pack()
+
+        self.heightBox = tk.Entry(root)
+        self.heightBox.pack()
+
+        gridText = tk.Label(root,text="Grid Size")
+        gridText.pack()
+
+        self.gridBox = tk.Entry(root)
+        self.gridBox.pack()
+        
         frame = tk.Frame(root)
 
         tk.Button(command=self.run, text="Run").pack(in_=frame,side=tk.LEFT)
@@ -23,8 +40,10 @@ class app:
         root.mainloop()
 
     def run(self):
-        scene = window(self.gridTam,title="Pathfind Test",width=self.width,height=self.height)
+        scene = window(int(self.gridBox.get()),title="Pathfind Test",width=int(self.widthBox.get()),height=int(self.heightBox.get()))
         scene.run()
+
+
 
 if __name__ == "__main__":
     app()
