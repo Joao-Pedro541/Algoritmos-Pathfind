@@ -46,6 +46,8 @@ class BFS(PathfindAlgoritm):
         if self.execute == False:
             self.ExecuteOnce()
     def step(self):
+        if self.execute == True:
+            return
         for b in list(self.verificy):
             self.verificy.remove(b)
 
@@ -76,9 +78,10 @@ class BFS(PathfindAlgoritm):
         
 
     def ExecuteOnce(self):
-        self.startPath = True
-        start = time.perf_counter()
-        while self.localizateEnd == False:
-            self.step()
-        end = time.perf_counter()
-        print(end -start)
+        if self.execute == False:
+            self.startPath = True
+            start = time.perf_counter()
+            while self.localizateEnd == False:
+                self.step()
+            end = time.perf_counter()
+            print(end -start)

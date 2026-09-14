@@ -6,7 +6,7 @@ class app:
     def __init__(self):
         root = tk.Tk()
         root.title("Pathfind Test")
-        root.geometry("320x375")
+        root.geometry("320x450")
         root.resizable(False, False)
 
         self.height = 700
@@ -31,7 +31,15 @@ class app:
 
         self.gridBox = tk.Entry(root)
         self.gridBox.pack()
-        
+
+        executeText = tk.Label(root,text="Execution Type")
+        executeText.pack()
+
+        self.executeType = tk.Listbox(root, selectmode=tk.SINGLE)
+        self.executeType.pack()
+
+        self.executeType.insert(1,"ExecuteOnce")
+        self.executeType.insert(2,"step")
         frame = tk.Frame(root)
 
         tk.Button(command=self.run, text="Run").pack(in_=frame,side=tk.LEFT)
@@ -40,7 +48,7 @@ class app:
         root.mainloop()
 
     def run(self):
-        scene = window(int(self.gridBox.get()),title="Pathfind Test",width=int(self.widthBox.get()),height=int(self.heightBox.get()))
+        scene = window(int(self.gridBox.get()), self.executeType.get(tk.ANCHOR), title="Pathfind Test", width=int(self.widthBox.get()), height=int(self.heightBox.get()))
         scene.run()
 
 

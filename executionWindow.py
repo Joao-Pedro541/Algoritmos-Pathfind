@@ -6,15 +6,16 @@ from Pathfinds.FloodFill_BFS import BFS
 
 class window(arcade.Window):
 
-    def __init__(self,lengthGrid,*args,**kwargs):
+    def __init__(self,lengthGrid,typeExecution,*args,**kwargs):
         super().__init__(*args,**kwargs)
 
+        self.typeExecution = typeExecution
         self.objects = [GridObject(lengthGrid,self.width,self.height)]
         self.getfunction = lambda name,*args, **kwargs: [getattr(obj,name)(*args,**kwargs) for obj in self.objects if hasattr(obj, name)]
         self.objects.append(BFS(self.objects[0]))
 
     def on_update(self,delta_time):
-        self.getfunction("on_update",delta_time)
+        self.getfunction(self.typeExecution)
         return super().on_update(delta_time)
     
     def draw(self, dt):
