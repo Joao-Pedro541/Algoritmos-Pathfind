@@ -10,6 +10,7 @@ def returnPathfinder(path, module_name = "pathfind"):
     module = lib_util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return getattr(module, module_name)
+
 class app:
     def __init__(self):
         root = tk.Tk()
@@ -24,7 +25,6 @@ class app:
         self.widthBox = tk.Entry(root)
         self.widthBox.pack()
 
-        
         tk.Label(root,text="Height").pack()
 
         self.heightBox = tk.Entry(root)
@@ -52,8 +52,6 @@ class app:
         self.pathfinderPath.insert(0, "No file loaded")
         tk.Button(command=self.openFile, text="Load Pathfinder Path").pack()
 
-        
-
         tk.Label(root,text="Module Name").pack()
 
         self.nameModule = tk.Entry(root)
@@ -75,7 +73,6 @@ class app:
             warning.title("Error")
             warning.geometry("200x100")
             tk.Label(warning, text="Please fill in all fields with valid values.", wraplength=180, justify=tk.LEFT).pack(padx=10, pady=10, fill=tk.X)
-            warning.mainloop()
             warning.mainloop()
         except Exception as e:
             warning = tk.Tk()
