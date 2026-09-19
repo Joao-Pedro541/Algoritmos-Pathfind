@@ -1,18 +1,18 @@
 import arcade
 
 from objects import GridObject
-from Pathfinds.FloodFill_BFS import BFS
+
 
 
 class window(arcade.Window):
 
-    def __init__(self,lengthGrid,typeExecution,*args,**kwargs):
+    def __init__(self,lengthGrid,typeExecution,pathfind,*args,**kwargs):
         super().__init__(*args,**kwargs)
-
         self.typeExecution = typeExecution
+        self.pathfinder = pathfind
         self.objects = [GridObject(lengthGrid,self.width,self.height)]
         self.getfunction = lambda name,*args, **kwargs: [getattr(obj,name)(*args,**kwargs) for obj in self.objects if hasattr(obj, name)]
-        self.objects.append(BFS(self.objects[0]))
+        self.objects.append(self.pathfinder(self.objects[0]))
 
     def on_update(self,delta_time):
         self.getfunction(self.typeExecution)
