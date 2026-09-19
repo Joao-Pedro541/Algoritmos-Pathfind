@@ -48,8 +48,15 @@ class app:
         root.mainloop()
 
     def run(self):
-        scene = window(int(self.gridBox.get()), self.executeType.get(tk.ANCHOR), title="Pathfind Test", width=int(self.widthBox.get()), height=int(self.heightBox.get()))
-        scene.run()
+        try:
+            scene = window(int(self.gridBox.get()), self.executeType.get(tk.ANCHOR), title="Pathfind Test", width=int(self.widthBox.get()), height=int(self.heightBox.get()))
+            scene.run()
+        except Exception as e:
+            warning = tk.Tk()
+            warning.title("Error")
+            warning.geometry("200x100")
+            tk.Label(warning, text=f"Error: {e}", wraplength=180, justify=tk.LEFT).pack(padx=10, pady=10, fill=tk.X)
+            warning.mainloop()
 
 
 
