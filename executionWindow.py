@@ -1,6 +1,12 @@
+
+
+import time
+
 import arcade
 
 from objects import GridObject
+
+
 
 
 
@@ -16,12 +22,13 @@ class window(arcade.Window):
 
     def on_update(self,delta_time):
         self.getfunction(self.typeExecution)
+        self.getfunction("on_update",delta_time)
         return super().on_update(delta_time)
     
-    def draw(self, dt):
+    def on_draw(self):
         self.clear()
-        self.getfunction("draw")
-        return super().draw(dt)
+        self.getfunction("on_draw")
+        return super().on_draw()
     
     def on_mouse_press(self, x, y, button, modifiers):
         self.getfunction("on_mouse_press", x, y, button, modifiers)

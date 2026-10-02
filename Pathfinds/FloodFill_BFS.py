@@ -52,7 +52,6 @@ class BFS(PathfindAlgoritm):
             self.verificy.remove(b)
 
             if b == self.END:
-                self.continuoStep = False
                 self.localizateEnd = True
                 self.returnPath(b)
                 self.execute = True

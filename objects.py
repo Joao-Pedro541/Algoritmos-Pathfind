@@ -2,6 +2,9 @@ from enum import Enum,auto
 import arcade 
 import math
 
+from PIL import Image, ImageDraw
+
+
 
 class BlockStates(Enum):
     START = auto()
@@ -15,8 +18,8 @@ class BlockStates(Enum):
     CLOSED = auto()
     PATH = auto()
 
-    CURRENT = auto()      # Nó sendo processado
-    FRONTIER = auto()     # Opcional
+    CURRENT = auto()
+    FRONTIER = auto()
 
 class GridObject():
     def __init__(self,grid,limityX,limityY):
@@ -26,6 +29,10 @@ class GridObject():
         self.limity = (limityX - self.grid,limityY - self.grid)
  
         self.blocks = {
+            self.calcGrid(0,0): BlockStates.START,
+            self.calcGrid(*self.limity): BlockStates.END
+        }
+        self.newBlockDrawn = {
             self.calcGrid(0,0): BlockStates.START,
             self.calcGrid(*self.limity): BlockStates.END
         }
@@ -42,6 +49,12 @@ class GridObject():
             BlockStates.CURRENT: arcade.color.ORANGE,
             BlockStates.FRONTIER: arcade.color.CYAN,
         }
+
+        self.img = Image.new("RGBA", (limityX, limityY), color=arcade.color.BLACK)
+        self.drawImg = arcade.Sprite(self.img, center_x=limityX//2, center_y=limityY//2)
+
+        print(self.img)
+        print(self.drawImg)
         
     
     def ajustGrid(self):
@@ -58,6 +71,18 @@ class GridObject():
             self.blocks.pop(block, None)
         if (0,0) <= block < self.limity:
             self.blocks[self.calcGrid(*block)] = state
+            self.newBlockDrawn[self.calcGrid(*block)] = state
+
+    def drawBlock(self,block:tuple):
+        print(block)
+        color = None
+        if block in self.blocks:
+            color = self.getColorBlock(self.blocks[block])
+        else:
+            color = self.getColorBlock(BlockStates.EMPTY)
+        draw = ImageDraw.Draw(self.img)
+        draw.rectangle((block[0], block[1], block[0] + self.grid, block[1] + self.grid), fill=color)
+        self.newBlockDrawn.pop(block, None)
 
 
 
@@ -78,7 +103,13 @@ class GridObject():
                 if s == state:
                     blocksStates.append(pos)
             return blocksStates
-            
+
+    def on_update(self,delta_time):
+        print("update")
+        for b in list(self.newBlockDrawn.keys()):
+            self.drawBlock(b)
+
+        self.drawImg.texture = arcade.Texture(self.img)
     
     def getNeighbors(self,pos:tuple,diagonal = True):
         if pos not in self.blocks:
@@ -105,15 +136,10 @@ class GridObject():
             
     def getColorBlock(self,state = BlockStates.EMPTY):
         return self.block_colors[state]
-        
-    def on_update(self,delta_time):
-        pass
     
-    def draw(self):
-        for b in self.blocks.keys():
-            x,y = b
-            arcade.draw_rect_filled(arcade.rect.XYWH(x +self.grid /2,y+self.grid /2,self.grid,self.grid),self.getColorBlock(self.blocks[b]))
-    
+    def on_draw(self):
+        arcade.draw_sprite(self.drawImg)
+
     def on_mouse_press(self, x, y, button, modifiers):
         if button == arcade.MOUSE_BUTTON_LEFT:
             mousePos = self.calcGrid(x,y)
@@ -133,9 +159,6 @@ class PathfindAlgoritm():
         self.END:tuple = None
 
         self.ajustGrid()
-
-        self.nextStep = False
-        self.continuoStep = False
         
     def ajustGrid(self):
         pass
