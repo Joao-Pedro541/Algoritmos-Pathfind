@@ -64,11 +64,11 @@ class app:
         root.mainloop()
 
     def run(self):
-        #try:
+        try:
             pathfinder_class = returnPathfinder(self.pathfinderPath.get(), self.nameModule.get())
             scene = window(int(self.gridBox.get()), self.executeType.get(tk.ANCHOR),pathfinder_class,title="Pathfind Test", width=int(self.widthBox.get()), height=int(self.heightBox.get()))
             scene.run()
-            '''
+        
         except ValueError:
             warning = tk.Tk()
             warning.title("Error")
@@ -81,7 +81,7 @@ class app:
             warning.geometry("200x100")
             tk.Label(warning, text=f"Error: {e}", wraplength=180, justify=tk.LEFT).pack(padx=10, pady=10, fill=tk.X)
             warning.mainloop()
-       '''
+       
 
     def openFile(self):
         file_path = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
