@@ -1,14 +1,8 @@
-
-
 import time
-
 import arcade
 
-from objects import GridObject
-
-
-
-
+from SystemGrid.GridObject import GridClass
+from SystemGrid.RenderObject import GridRenderer
 
 class window(arcade.Window):
 
@@ -16,8 +10,9 @@ class window(arcade.Window):
         super().__init__(*args,**kwargs)
         self.typeExecution = typeExecution
         self.pathfinder = pathfind
-        self.objects = [GridObject(lengthGrid,self.width,self.height)]
+        self.objects = [GridClass(lengthGrid,self.width,self.height)]
         self.getfunction = lambda name,*args, **kwargs: [getattr(obj,name)(*args,**kwargs) for obj in self.objects if hasattr(obj, name)]
+        self.objects.append(GridRenderer(self.objects[0], self.width, self.height))
         self.objects.append(self.pathfinder(self.objects[0]))
 
     def on_update(self,delta_time):
@@ -39,3 +34,4 @@ class window(arcade.Window):
         if symbol == arcade.key.ESCAPE:
             print("exit")
             self.close()
+

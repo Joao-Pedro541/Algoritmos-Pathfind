@@ -1,5 +1,7 @@
-from objects import PathfindAlgoritm,BlockStates
+from SystemGrid.PathfindObject import PathfindAlgoritm
+from SystemGrid.statesGrid import BlockStates
 import time
+
 class BFS(PathfindAlgoritm):
     def __init__(self, grid):
         self.startPath = False
@@ -12,6 +14,7 @@ class BFS(PathfindAlgoritm):
         super().__init__(grid)
         self.ajustGrid()
         self.execute= False
+        self.startTime = time.perf_counter()
         
         
         
@@ -42,9 +45,6 @@ class BFS(PathfindAlgoritm):
         
         self.parent = {}
 
-    def on_update(self,delta_time):
-        if self.execute == False:
-            self.ExecuteOnce()
     def step(self):
         if self.execute == True:
             return
@@ -56,6 +56,8 @@ class BFS(PathfindAlgoritm):
                 self.returnPath(b)
                 self.execute = True
                 print("fim")
+                end = time.perf_counter()
+                print(end - self.startTime)
                 break
             
             neighbors = self.gridObject.getNeighbors(b, False)
@@ -79,8 +81,7 @@ class BFS(PathfindAlgoritm):
     def ExecuteOnce(self):
         if self.execute == False:
             self.startPath = True
-            start = time.perf_counter()
+           
             while self.localizateEnd == False:
                 self.step()
-            end = time.perf_counter()
-            print(end -start)
+            

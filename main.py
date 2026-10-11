@@ -32,7 +32,7 @@ class app:
 
         gridText = tk.Label(root,text="Grid Size")
         gridText.pack()
-
+ 
         self.gridBox = tk.Entry(root)
         self.gridBox.pack()
 
