@@ -1,8 +1,8 @@
+import time
 import arcade
 
-from objects import GridObject
-
-
+from SystemGrid.GridObject import GridClass
+from SystemGrid.RenderObject import GridRenderer
 
 class window(arcade.Window):
 
@@ -10,18 +10,20 @@ class window(arcade.Window):
         super().__init__(*args,**kwargs)
         self.typeExecution = typeExecution
         self.pathfinder = pathfind
-        self.objects = [GridObject(lengthGrid,self.width,self.height)]
+        self.objects = [GridClass(lengthGrid,self.width,self.height)]
         self.getfunction = lambda name,*args, **kwargs: [getattr(obj,name)(*args,**kwargs) for obj in self.objects if hasattr(obj, name)]
+        self.objects.append(GridRenderer(self.objects[0], self.width, self.height))
         self.objects.append(self.pathfinder(self.objects[0]))
 
     def on_update(self,delta_time):
         self.getfunction(self.typeExecution)
+        self.getfunction("on_update",delta_time)
         return super().on_update(delta_time)
     
-    def draw(self, dt):
+    def on_draw(self):
         self.clear()
-        self.getfunction("draw")
-        return super().draw(dt)
+        self.getfunction("on_draw")
+        return super().on_draw()
     
     def on_mouse_press(self, x, y, button, modifiers):
         self.getfunction("on_mouse_press", x, y, button, modifiers)
@@ -32,3 +34,4 @@ class window(arcade.Window):
         if symbol == arcade.key.ESCAPE:
             print("exit")
             self.close()
+
