@@ -36,13 +36,6 @@ class app:
         self.gridBox = tk.Entry(root)
         self.gridBox.pack()
 
-        tk.Label(root,text="Execution Type").pack()
-
-        self.executeType = tk.Listbox(root, selectmode=tk.SINGLE)
-        self.executeType.pack()
-
-        self.executeType.insert(1,"ExecuteOnce")
-        self.executeType.insert(2,"step")
         frame = tk.Frame(root)
 
         tk.Label(root,text="File Selected").pack()
@@ -66,20 +59,13 @@ class app:
     def run(self):
         try:
             pathfinder_class = returnPathfinder(self.pathfinderPath.get(), self.nameModule.get())
-            scene = window(int(self.gridBox.get()), self.executeType.get(tk.ANCHOR),pathfinder_class,title="Pathfind Test", width=int(self.widthBox.get()), height=int(self.heightBox.get()))
-            scene.run()
+            scene = window(int(self.gridBox.get()), pathfinder_class, width=int(self.widthBox.get()), height=int(self.heightBox.get()))
         
         except ValueError:
             warning = tk.Tk()
             warning.title("Error")
             warning.geometry("200x100")
             tk.Label(warning, text="Please fill in all fields with valid values.", wraplength=180, justify=tk.LEFT).pack(padx=10, pady=10, fill=tk.X)
-            warning.mainloop()
-        except Exception as e:
-            warning = tk.Tk()
-            warning.title("Error")
-            warning.geometry("200x100")
-            tk.Label(warning, text=f"Error: {e}", wraplength=180, justify=tk.LEFT).pack(padx=10, pady=10, fill=tk.X)
             warning.mainloop()
        
 

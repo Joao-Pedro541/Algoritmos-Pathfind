@@ -1,5 +1,7 @@
 
-import arcade
+import numpy as np
+import cv2
+
 from PIL import Image, ImageDraw
 
 from .statesGrid import BlockStates
@@ -10,14 +12,12 @@ class GridRenderer:
         self.grid = grid
         self.img = Image.new(
             "RGBA",
-            (limityX, limityY),
-            color=arcade.color.BLACK
+            (limityX*2, limityY*2),
+            color= (0,0,0,255)
         )
-        self.drawImg = arcade.Sprite(
-            self.img,
-            center_x=limityX // 2,
-            center_y=limityY // 2
-        )
+
+        self.frames = []
+
 
     def drawBlock(self, block, blocks):
         if block in blocks:
@@ -36,12 +36,15 @@ class GridRenderer:
             fill=color
         )
 
-    def on_update(self, delta_time):
-        for b in list(self.grid.newBlockDrawn):
-            self.drawBlock(b, self.grid.blocks)
-            self.grid.newBlockDrawn.remove(b)
+    def render(self):
+        if self.grid.newBlockDrawn == []:
+            return None
+        self.drawBlock(self.grid.newBlockDrawn[0], self.grid.blocks)
+        self.grid.newBlockDrawn.remove(self.grid.newBlockDrawn[0])
 
-        self.drawImg.texture = arcade.Texture(self.img)
+        # Convertendo para NumPy
+        frame = np.array(self.img)
 
-    def on_draw(self):
-        arcade.draw_sprite(self.drawImg)
+        # PIL utiliza RGB, OpenCV normalmente utiliza BGR
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+        return frame

@@ -13,15 +13,15 @@ class GridClass:
             (x // self.grid) * self.grid,
             (y // self.grid) * self.grid
         )
-        self.limity = (limityX - self.grid, limityY - self.grid)
+        self.limity = (limityX , limityY)
 
         self.blocks = {
             self.calcGrid(0, 0): BlockStates.START,
-            self.calcGrid(*self.limity): BlockStates.END
+            self.calcGrid(690, 690): BlockStates.END
         }
         self.newBlockDrawn = [
             self.calcGrid(0, 0),
-            self.calcGrid(*self.limity)
+            self.calcGrid(690, 690)
         ]
 
         self.block_colors = {
@@ -50,9 +50,13 @@ class GridClass:
                 especialBlocks[i] = b
 
     def setBlock(self, block: tuple, state: BlockStates = BlockStates.EMPTY):
+        #print(f"x: {block[0]}, y: {block[1]}")
+        if not (0 <= block[0] < self.limity[0] and 0 <= block[1] < self.limity[1]):
+            #print("Block out of limits")
+             return
         if state == BlockStates.EMPTY:
             self.blocks.pop(block, None)
-        if (0, 0) <= block < self.limity:
+        else:
             self.blocks[self.calcGrid(*block)] = state
         self.newBlockDrawn.append(block)
 
@@ -75,7 +79,7 @@ class GridClass:
             return blocksStates
 
     def getNeighbors(self, pos: tuple, diagonal=True):
-        if pos not in self.blocks:
+        if not (0 <= pos[0] < self.limity[0] and 0 <= pos[1] < self.limity[1]):
             return None
 
         neightbors = {}
@@ -96,7 +100,7 @@ class GridClass:
                 dx = x == pos[0]
                 dy = y == pos[1]
 
-                if not diagonal and not (dx or dy):
+                if (not diagonal and not (dx or dy) or not (0 <= x < self.limity[0] and 0 <= y < self.limity[1])):
                     continue
 
                 if (x, y) in self.blocks:

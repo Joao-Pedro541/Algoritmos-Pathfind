@@ -1,37 +1,51 @@
+import cv2
+import numpy as np 
+
 import time
-import arcade
 
 from SystemGrid.GridObject import GridClass
 from SystemGrid.RenderObject import GridRenderer
 
-class window(arcade.Window):
+class window:
 
-    def __init__(self,lengthGrid,typeExecution,pathfind,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-        self.typeExecution = typeExecution
+    def __init__(self,lengthGrid,pathfind,width,height):
+
+        self.width = width
+        self.height = height
+
         self.pathfinder = pathfind
-        self.objects = [GridClass(lengthGrid,self.width,self.height)]
-        self.getfunction = lambda name,*args, **kwargs: [getattr(obj,name)(*args,**kwargs) for obj in self.objects if hasattr(obj, name)]
-        self.objects.append(GridRenderer(self.objects[0], self.width, self.height))
-        self.objects.append(self.pathfinder(self.objects[0]))
+        self.gridObject = GridClass(lengthGrid,self.width,self.height)
 
-    def on_update(self,delta_time):
-        self.getfunction(self.typeExecution)
-        self.getfunction("on_update",delta_time)
-        return super().on_update(delta_time)
-    
-    def on_draw(self):
-        self.clear()
-        self.getfunction("on_draw")
-        return super().on_draw()
-    
-    def on_mouse_press(self, x, y, button, modifiers):
-        self.getfunction("on_mouse_press", x, y, button, modifiers)
-        return super().on_mouse_press(x, y, button, modifiers)
+        self.gridRenderer = GridRenderer(self.gridObject, self.width, self.height)
+        self.pathfinderObject = self.pathfinder(self.gridObject)
 
-    def on_key_press(self, symbol, modifiers):
-        self.getfunction("on_press_key", symbol, modifiers)
-        if symbol == arcade.key.ESCAPE:
-            print("exit")
-            self.close()
+        self.simulation()
+
+    def record(self, filename, fps=30):
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(filename, fourcc, fps, (self.width * 2, self.height * 2))
+
+        while True:
+
+            frame = self.gridRenderer.render()
+            if frame is None:
+                break
+            out.write(frame)
+
+        print("Recording finished.")
+        out.release()
+        cv2.destroyAllWindows()
+
+    def simulation(self):
+        self.pathfinderObject.ExecuteOnce()
+
+        self.record("output.mp4", fps=240)
+        while True:
+            start_time = time.time()
+            frame = self.gridRenderer.render()
+            if (cv2.waitKey(1) & 0xFF == ord('q') or frame is None):
+                break
+            cv2.imshow("Captured Frame", frame)
+        cv2.destroyAllWindows() 
+
 

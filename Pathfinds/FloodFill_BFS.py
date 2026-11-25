@@ -32,6 +32,7 @@ class BFS(PathfindAlgoritm):
 
 
     def returnPath(self,pos):
+        print("Path found")
         path = []
         nodeActual = pos
         while nodeActual != self.START:
@@ -52,6 +53,7 @@ class BFS(PathfindAlgoritm):
             self.verificy.remove(b)
 
             if b == self.END:
+                print("End found")
                 self.localizateEnd = True
                 self.returnPath(b)
                 self.execute = True
@@ -61,6 +63,7 @@ class BFS(PathfindAlgoritm):
                 break
             
             neighbors = self.gridObject.getNeighbors(b, False)
+            print(f"neighbors: {neighbors}")
             if neighbors == None:
                 continue
             for n in neighbors:
@@ -83,5 +86,10 @@ class BFS(PathfindAlgoritm):
             self.startPath = True
            
             while self.localizateEnd == False:
+                if len(self.verificy) == 0:
+                    print("No path found")
+                    self.execute = True
+                    break
                 self.step()
+            print(len(self.gridObject.newBlockDrawn))
             
