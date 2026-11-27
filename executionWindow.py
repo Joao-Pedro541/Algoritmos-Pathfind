@@ -1,5 +1,6 @@
 import cv2
 import numpy as np 
+import tkinter as tk
 
 import time
 
@@ -23,7 +24,7 @@ class window:
 
     def record(self, filename, fps=30):
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(filename, fourcc, fps, (self.width * 2, self.height * 2))
+        out = cv2.VideoWriter(filename, fourcc, fps, (self.width, self.height))
 
         while True:
 
@@ -37,15 +38,32 @@ class window:
         cv2.destroyAllWindows()
 
     def simulation(self):
-        self.pathfinderObject.ExecuteOnce()
+        self.pathfinderObject.run()
 
-        self.record("output.mp4", fps=240)
-        while True:
-            start_time = time.time()
-            frame = self.gridRenderer.render()
-            if (cv2.waitKey(1) & 0xFF == ord('q') or frame is None):
-                break
-            cv2.imshow("Captured Frame", frame)
-        cv2.destroyAllWindows() 
+        root = tk.Tk()
+        root.title("videoPathfind")
+        root.geometry("320x320")
+        root.resizable(False, False)
+        tkFrame = tk.Frame(root)
+        
+        pause = False
+
+        frameInt = 0
+        show = True
+
+        while show:
+            
+            frame = self.gridRenderer.render(frameInt)
+            if frame is not None:
+                cv2.imshow("Pathfind Simulation", frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    pause = not pause
+                if cv2.waitKey(1) & 0xFF == ord('e'):
+                    break
+            else:
+                show = False
+
+            frameInt = frameInt + 1 if not pause or len(self.gridObject.newBlockDrawn) <= frameInt else len(self.gridObject.newBlockDrawn) - 1
+        self.record("output.mp4", fps=30)
 
 

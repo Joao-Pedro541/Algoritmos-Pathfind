@@ -12,19 +12,16 @@ class GridRenderer:
         self.grid = grid
         self.img = Image.new(
             "RGBA",
-            (limityX*2, limityY*2),
+            (limityX, limityY),
             color= (0,0,0,255)
         )
 
         self.frames = []
 
 
-    def drawBlock(self, block, blocks):
-        if block in blocks:
-            color = self.grid.getColorBlock(blocks[block])
-        else:
-            color = self.grid.getColorBlock()
+    def drawBlock(self, block, state: BlockStates = BlockStates.EMPTY):
 
+        color = self.grid.getColorBlock(state)
         draw = ImageDraw.Draw(self.img)
         draw.rectangle(
             (
@@ -36,11 +33,11 @@ class GridRenderer:
             fill=color
         )
 
-    def render(self):
+    def render(self,frameINT: int=0):
         if self.grid.newBlockDrawn == []:
             return None
-        self.drawBlock(self.grid.newBlockDrawn[0], self.grid.blocks)
-        self.grid.newBlockDrawn.remove(self.grid.newBlockDrawn[0])
+        block, state = self.grid.newBlockDrawn[frameINT]
+        self.drawBlock(block, state)
 
         # Convertendo para NumPy
         frame = np.array(self.img)

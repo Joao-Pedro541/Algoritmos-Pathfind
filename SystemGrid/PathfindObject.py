@@ -12,11 +12,7 @@ class PathfindAlgoritm():
     def ajustGrid(self):
         pass
 
-    def on_update(self,delta_time):
+    def run(self):
         pass
-
-    def ExecuteOnce(self):
-        pass
-
     def step(self):
         pass

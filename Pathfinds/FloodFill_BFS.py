@@ -63,7 +63,6 @@ class BFS(PathfindAlgoritm):
                 break
             
             neighbors = self.gridObject.getNeighbors(b, False)
-            print(f"neighbors: {neighbors}")
             if neighbors == None:
                 continue
             for n in neighbors:
@@ -81,7 +80,7 @@ class BFS(PathfindAlgoritm):
                 self.verificy.append(n)
         
 
-    def ExecuteOnce(self):
+    def run(self):
         if self.execute == False:
             self.startPath = True
            
@@ -91,5 +90,4 @@ class BFS(PathfindAlgoritm):
                     self.execute = True
                     break
                 self.step()
-            print(len(self.gridObject.newBlockDrawn))
             

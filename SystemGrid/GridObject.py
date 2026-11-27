@@ -20,9 +20,10 @@ class GridClass:
             self.calcGrid(690, 690): BlockStates.END
         }
         self.newBlockDrawn = [
-            self.calcGrid(0, 0),
-            self.calcGrid(690, 690)
+            (self.calcGrid(0, 0), BlockStates.START),
+            (self.calcGrid(690, 690), BlockStates.END)
         ]
+        
 
         self.block_colors = {
             BlockStates.EMPTY: arcade.color.BLACK,
@@ -50,15 +51,13 @@ class GridClass:
                 especialBlocks[i] = b
 
     def setBlock(self, block: tuple, state: BlockStates = BlockStates.EMPTY):
-        #print(f"x: {block[0]}, y: {block[1]}")
-        if not (0 <= block[0] < self.limity[0] and 0 <= block[1] < self.limity[1]):
-            #print("Block out of limits")
+        if not (0 <= block[0] <= self.limity[0] and 0 <= block[1] <= self.limity[1]):
              return
         if state == BlockStates.EMPTY:
             self.blocks.pop(block, None)
         else:
             self.blocks[self.calcGrid(*block)] = state
-        self.newBlockDrawn.append(block)
+        self.newBlockDrawn.append((block, state))
 
     def getBlock(self, block: tuple = None, state: BlockStates = None):
         if block is not None:
@@ -79,7 +78,7 @@ class GridClass:
             return blocksStates
 
     def getNeighbors(self, pos: tuple, diagonal=True):
-        if not (0 <= pos[0] < self.limity[0] and 0 <= pos[1] < self.limity[1]):
+        if not (0 <= pos[0] <= self.limity[0] and 0 <= pos[1] <= self.limity[1]):
             return None
 
         neightbors = {}
